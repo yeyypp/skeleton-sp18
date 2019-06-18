@@ -9,6 +9,11 @@ public class DebugExercise3 {
             String foodType = in.readString();
             double cost = in.readDouble();
             int numAvailable = in.readInt();
+            // the data in the store "kroger" is negative
+            if (vendor.equals("kroger") && foodType.equals("turnip")) {
+                totalTurnips = totalTurnips - numAvailable;
+                continue;
+            }
             if (foodType.equals("turnip")) {
                 int newTotal = totalTurnips + numAvailable;
                 totalTurnips = newTotal;
