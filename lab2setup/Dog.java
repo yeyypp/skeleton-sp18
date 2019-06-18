@@ -1,3 +1,4 @@
+
 public class Dog {
     private int size;
 
@@ -5,7 +6,8 @@ public class Dog {
         size = s;
     }
 
-    /** Makes a noise. */
+    /** Makes a noise.
+     * @return*/
     public String noise() {
         if (size < 10) {
             return "yip";
