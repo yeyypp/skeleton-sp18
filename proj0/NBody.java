@@ -46,14 +46,14 @@ public class NBody {
          }
     }
 
-    private static double readRadius(String path) {
+    public static double readRadius(String path) {
         In in = new In(path);
         int number = in.readInt();
         double Radius = in.readDouble();
         return Radius;
     }
 
-    private static Planet[] readPlanets(String path) {
+    public static Planet[] readPlanets(String path) {
         In in = new In(path);
         Planet[] planets = new Planet[in.readInt()];
         double Radius = in.readDouble();

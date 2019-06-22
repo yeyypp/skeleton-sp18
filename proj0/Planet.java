@@ -30,24 +30,24 @@ public class Planet {
         imgFileName = p.imgFileName;
     }
 
-    private double calcDistance(Planet p) {
+    public double calcDistance(Planet p) {
         double dx = p.xxPos - this.xxPos;
         double dy = p.yyPos - this.yyPos;
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    private double calcForceExertedBy(Planet p) {
+    public double calcForceExertedBy(Planet p) {
         return G * this.mass * p.mass / Math.pow(calcDistance(p), 2);
     }
 
-    private double calcForceExertedByX(Planet p) {
+    public double calcForceExertedByX(Planet p) {
         double F = calcForceExertedBy(p);
         double dx = p.xxPos - this.xxPos;
         double r = calcDistance(p);
         return F * dx / r;
     }
 
-    private double calcForceExertedByY(Planet p) {
+    public double calcForceExertedByY(Planet p) {
         double F = calcForceExertedBy(p);
         double dy = p.yyPos - this.yyPos;
         double r = calcDistance(p);
