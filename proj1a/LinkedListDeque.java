@@ -94,6 +94,7 @@ public class LinkedListDeque<T> {
        } else {
            next.pre = null;
        }
+       first = next;
        size--;
        return item;
     }
@@ -109,20 +110,22 @@ public class LinkedListDeque<T> {
         } else {
             pre.next = null;
         }
+        last = pre;
         size--;
         return item;
     }
 
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
+        if (index < 0 || index > size - 1 || size == 0) {
             return null;
         }
+
         Node<T> cur = first;
-        while (index > 0) {
+        while (index > 0 && cur != null) {
             cur = cur.next;
             index--;
         }
-        return cur.value;
+        return cur == null ? null : cur.value;
     }
 
     public T getRecursive(int index) {
@@ -130,7 +133,10 @@ public class LinkedListDeque<T> {
     }
 
     private T getHelper(int index, Node<T> node) {
-        if (index < 0 || index > size - 1) {
+        if (index < 0 || index > size - 1 || size == 0) {
+            return null;
+        }
+        if (node == null) {
             return null;
         }
         if (index == 0) {

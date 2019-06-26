@@ -6,7 +6,7 @@
 public class ArrayDeque<T> {
     private T[] elements;
     private int size;
-    private final static double factor = 0.25;
+    private static final double FACTOR = 0.25;
     private int first;
     private int last;
 
@@ -73,9 +73,9 @@ public class ArrayDeque<T> {
         T item = elements[first];
         elements[first] = null;
         size--;
-        if (size < elements.length * factor) {
+        if (size < elements.length * FACTOR) {
 
-            T[] newElements = (T[]) new Object[(int) (elements.length * factor)];
+            T[] newElements = (T[]) new Object[(int) (elements.length * FACTOR)];
             int j = 0;
             for (int i = 0; i < elements.length; i++) {
                 if (elements[i] != null) {
@@ -98,8 +98,8 @@ public class ArrayDeque<T> {
         T item = elements[last];
         elements[last] = null;
         size--;
-        if (size < elements.length * factor) {
-            T[] newElements = (T[]) new Object[(int) (elements.length * factor)];
+        if (size < elements.length * FACTOR) {
+            T[] newElements = (T[]) new Object[(int) (elements.length * FACTOR)];
             int j = 0;
             for (int i = 0; i < elements.length; i++) {
                 if (elements[i] != null) {
