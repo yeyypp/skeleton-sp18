@@ -4,7 +4,7 @@
  */
 public class LinkedListDeque<T> {
 
-    class Node<T> {
+     private class Node<T> {
         private T value;
         private Node<T> pre;
         private Node<T> next;

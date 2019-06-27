@@ -36,7 +36,7 @@ public class ArrayDeque<T> {
         elements = newElements;
     }
 
-    public void shrinkSize() {
+    private void shrinkSize() {
         if (elements.length == MINSIZE) {
             return;
         }
@@ -58,6 +58,9 @@ public class ArrayDeque<T> {
         first = nextFirst;
         nextFirst = --nextFirst < 0 ? elements.length - 1 : nextFirst;
         size++;
+        if (size == 1) {
+            last = first;
+        }
         if (size == elements.length) {
             addSize();
         }
@@ -68,6 +71,9 @@ public class ArrayDeque<T> {
         last = nextLast;
         nextLast = ++nextLast == elements.length ? 0 : nextLast;
         size++;
+        if (size == 1) {
+            first = last;
+        }
         if (size == elements.length) {
             addSize();
         }
