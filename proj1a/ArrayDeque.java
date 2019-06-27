@@ -8,56 +8,68 @@ public class ArrayDeque<T> {
     private T[] elements;
     private int size;
     private static final double FACTOR = 0.25;
+    private static final int MINSIZE = 8;
     private int first;
     private int last;
-    private static final int MINSIZE = 8;
+    private int nextFirst;
+    private int nextLast;
 
     public ArrayDeque() {
-        this.elements = (T[]) new Object[8];
-        this.first = 3;
-        this.last = 4;
-        this.size = 0;
+        this.elements = (T[]) new Object[MINSIZE];
+        size = 0;
+        first = 3;
+        last = 4;
+        nextFirst = 3;
+        nextLast = 4;
     }
 
-    private void resize(int capacity) {
-        T[] newElements = (T[]) new Object[capacity];
-        System.arraycopy(elements, 0, newElements, 0, size);
+    private void addSize() {
+        T[] newElements = (T[]) new Object[elements.length * 2];
+        for (int i = 0; i < size; i++) {
+            newElements[i] = elements[first];
+            first = ++first == elements.length  ? 0 : first;
+        }
+        first = 0;
+        last = size - 1;
+        nextFirst = newElements.length - 1;
+        nextLast = size;
+        elements = newElements;
+    }
+
+    public void shrinkSize() {
+        if (elements.length == MINSIZE) {
+            return;
+        }
+        int newSize = elements.length * FACTOR < MINSIZE ? MINSIZE : (int) (elements.length * FACTOR);
+        T[] newElements = (T[]) new Object[newSize];
+        for (int i = 0; i < size; i++) {
+            newElements[i] = elements[first];
+            first = ++first == elements.length  ? 0 : first;
+        }
+        first = 0;
+        last = size - 1;
+        nextFirst = newElements.length - 1;
+        nextLast = size;
         elements = newElements;
     }
 
     public void addFirst(T item) {
-        if (item == null) {
-            return;
-        }
-        elements[first] = item;
-        if (first == 0) {
-            first = elements.length - 1;
-        } else {
-            first--;
-        }
+        elements[nextFirst] = item;
+        first = nextFirst;
+        nextFirst = --nextFirst < 0 ? elements.length - 1 : nextFirst;
         size++;
         if (size == elements.length) {
-            resize(size * 2);
-            first = elements.length - 1;
-            last = size;
+            addSize();
         }
     }
 
     public void addLast(T item) {
-        if (item == null) {
-            return;
-        }
-        elements[last] = item;
-        if (last == elements.length - 1) {
-            last = 0;
-        } else {
-            last++;
-        }
+        elements[nextLast] = item;
+        last = nextLast;
+        nextLast = ++nextLast == elements.length ? 0 : nextLast;
         size++;
         if (size == elements.length) {
-            resize(size * 2);
-            first = elements.length - 1;
-            last = size;
+            addSize();
         }
     }
 
@@ -73,10 +85,10 @@ public class ArrayDeque<T> {
         if (size == 0) {
             return;
         }
-        int i = first;
-        for (int j = 0; j < size; j++) {
-            i = ++i == elements.length ? 0 : i;
-            System.out.println(elements[i].toString());
+        int cur = first;
+        for (int i = 0; i < size; i++) {
+            System.out.println(elements[cur]);
+            cur = ++cur == elements.length ? 0 : cur;
         }
     }
 
@@ -84,27 +96,13 @@ public class ArrayDeque<T> {
         if (size == 0) {
             return null;
         }
-        first = ++first == elements.length ? 0 : first;
         T item = elements[first];
         elements[first] = null;
+        nextFirst = first;
+        first = ++first == elements.length ? 0 : first;
         size--;
         if (size < elements.length * FACTOR) {
-            int newSize = elements.length * FACTOR < MINSIZE ? MINSIZE : (int) (elements.length * FACTOR);
-            T[] newElements = (T[]) new Object[newSize];
-            if (first > last) {
-                System.arraycopy(elements, first + 1, newElements, 0, size);
-                first = newElements.length - 1;
-                last = size;
-                elements = newElements;
-            } else {
-                for (int i = 0; i < size; i++) {
-                    first = ++first > elements.length - 1 ? 0 : first;
-                    newElements[i] = elements[first];
-                }
-                first = newElements.length - 1;
-                last = size;
-                elements = newElements;
-            }
+            shrinkSize();
         }
         return item;
     }
@@ -113,27 +111,13 @@ public class ArrayDeque<T> {
         if (size == 0) {
             return null;
         }
-        last = --last < 0 ? elements.length - 1 : last;
         T item = elements[last];
         elements[last] = null;
+        nextLast = last;
+        last = --last < 0 ? elements.length - 1 : last;
         size--;
         if (size < elements.length * FACTOR) {
-            int newSize = elements.length * FACTOR < MINSIZE ? MINSIZE : (int) (elements.length * FACTOR);
-            T[] newElements = (T[]) new Object[newSize];
-            if (first > last) {
-                System.arraycopy(elements, first + 1, newElements, 0, size);
-                first = newElements.length - 1;
-                last = size;
-                elements = newElements;
-            } else {
-                for (int i = 0; i < size; i++) {
-                    first = ++first > elements.length - 1 ? 0 : first;
-                    newElements[i] = elements[first];
-                }
-                first = newElements.length - 1;
-                last = size;
-                elements = newElements;
-            }
+            shrinkSize();
         }
         return item;
     }
@@ -142,7 +126,7 @@ public class ArrayDeque<T> {
         if (index < 0 || index > size - 1) {
             return null;
         }
-        first = ++first == elements.length ? 0 : first;
-        return elements[(first + index) % elements.length];
+        int cur = first;
+        return elements[(cur + index) % elements.length];
     }
 }
