@@ -68,8 +68,13 @@ public class ArrayDeque<T> {
     }
 
     public void printDeque() {
-        for (T t : elements) {
-            System.out.println(t.toString());
+        if (size == 0) {
+            return;
+        }
+        int i = first;
+        for (int j = 0; j < size; j++) {
+            i = ++i == elements.length ? 0 : i;
+            System.out.println(elements[i].toString());
         }
     }
 
@@ -133,6 +138,7 @@ public class ArrayDeque<T> {
         if (index < 0 || index > size - 1) {
             return null;
         }
+        first = ++first == elements.length ? 0 : first;
         return elements[(first + index) % elements.length];
     }
 }
