@@ -28,7 +28,11 @@ public class ArrayDeque<T> {
             return;
         }
         elements[first] = item;
-        first = --first < 0 ? elements.length - 1 : first;
+        if (first == 0) {
+            first = elements.length - 1;
+        } else {
+            first--;
+        }
         size++;
         if (size == elements.length) {
             resize(size * 2);
@@ -42,7 +46,11 @@ public class ArrayDeque<T> {
             return;
         }
         elements[last] = item;
-        last = ++last == elements.length ? 0 : last;
+        if (last == elements.length - 1) {
+            last = 0;
+        } else {
+            last++;
+        }
         size++;
         if (size == elements.length) {
             resize(size * 2);
@@ -74,18 +82,21 @@ public class ArrayDeque<T> {
         elements[first] = null;
         size--;
         if (size < elements.length * FACTOR) {
-
             T[] newElements = (T[]) new Object[(int) (elements.length * FACTOR)];
-            int j = 0;
-            for (int i = 0; i < elements.length; i++) {
-                if (elements[i] != null) {
-                    newElements[j] = elements[i];
-                    j++;
+            if (first > last) {
+                System.arraycopy(elements, first + 1, newElements, 0, size);
+                first = newElements.length - 1;
+                last = size;
+                elements = newElements;
+            } else {
+                for (int i = 0; i < size; i++) {
+                    first = ++first > elements.length - 1 ? 0 : first;
+                    newElements[i] = elements[first];
                 }
+                first = newElements.length - 1;
+                last = size;
+                elements = newElements;
             }
-            elements = newElements;
-            first = elements.length - 1;
-            last = size;
         }
         return item;
     }
@@ -100,24 +111,28 @@ public class ArrayDeque<T> {
         size--;
         if (size < elements.length * FACTOR) {
             T[] newElements = (T[]) new Object[(int) (elements.length * FACTOR)];
-            int j = 0;
-            for (int i = 0; i < elements.length; i++) {
-                if (elements[i] != null) {
-                    newElements[j] = elements[i];
-                    j++;
+            if (first > last) {
+                System.arraycopy(elements, first + 1, newElements, 0, size);
+                first = newElements.length - 1;
+                last = size;
+                elements = newElements;
+            } else {
+                for (int i = 0; i < size; i++) {
+                    first = ++first > elements.length - 1 ? 0 : first;
+                    newElements[i] = elements[first];
                 }
+                first = newElements.length - 1;
+                last = size;
+                elements = newElements;
             }
-            elements = newElements;
-            first = elements.length - 1;
-            last = size;
         }
         return item;
     }
 
     public T get(int index) {
-        if (index < 0 || index > elements.length - 1) {
+        if (index < 0 || index > size - 1) {
             return null;
         }
-        return elements[index];
+        return elements[(first + index) % elements.length];
     }
 }
