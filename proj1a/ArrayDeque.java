@@ -1,3 +1,4 @@
+import javax.xml.stream.FactoryConfigurationError;
 
 /**
  * @author ShuaiYe
@@ -9,6 +10,7 @@ public class ArrayDeque<T> {
     private static final double FACTOR = 0.25;
     private int first;
     private int last;
+    private static final int MINSIZE = 8;
 
     public ArrayDeque() {
         this.elements = (T[]) new Object[8];
@@ -87,7 +89,8 @@ public class ArrayDeque<T> {
         elements[first] = null;
         size--;
         if (size < elements.length * FACTOR) {
-            T[] newElements = (T[]) new Object[(int) (elements.length * FACTOR)];
+            int newSize = elements.length * FACTOR < MINSIZE ? MINSIZE : (int) (elements.length * FACTOR);
+            T[] newElements = (T[]) new Object[newSize];
             if (first > last) {
                 System.arraycopy(elements, first + 1, newElements, 0, size);
                 first = newElements.length - 1;
@@ -115,7 +118,8 @@ public class ArrayDeque<T> {
         elements[last] = null;
         size--;
         if (size < elements.length * FACTOR) {
-            T[] newElements = (T[]) new Object[(int) (elements.length * FACTOR)];
+            int newSize = elements.length * FACTOR < MINSIZE ? MINSIZE : (int) (elements.length * FACTOR);
+            T[] newElements = (T[]) new Object[newSize];
             if (first > last) {
                 System.arraycopy(elements, first + 1, newElements, 0, size);
                 first = newElements.length - 1;
