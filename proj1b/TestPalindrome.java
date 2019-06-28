@@ -35,6 +35,8 @@ public class TestPalindrome {
         String c = "";
         String d = "abba";
         String e = null;
+        String f = "%&";
+        assertTrue(palindrome.isPalindrome(f, o));
         assertTrue(palindrome.isPalindrome(a, o));
         assertTrue(palindrome.isPalindrome(b, o));
         assertTrue(palindrome.isPalindrome(c, o));
