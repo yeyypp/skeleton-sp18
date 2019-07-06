@@ -4,7 +4,7 @@ package synthesizer;
  * @author ShuaiYe
  * @date 2019/7/5 21:58
  */
-public interface BoundedQueue<T> {
+public interface BoundedQueue<T> extends Iterable<T> {
 
     default boolean isEmpty() {
         return fillCount() == 0;
