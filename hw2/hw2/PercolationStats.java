@@ -42,7 +42,5 @@ public class PercolationStats {
         return (mean() + (1.96 * stddev() / Math.sqrt(T)));
     }
 
-    public static void main(String[] args) {
-        
-    }
+  
 }
