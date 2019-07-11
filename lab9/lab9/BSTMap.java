@@ -44,7 +44,21 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      *  or null if this map contains no mapping for the key.
      */
     private V getHelper(K key, Node p) {
-        throw new UnsupportedOperationException();
+        if (key == null) {
+            throw new NullPointerException();
+        }
+        Node tem = p;
+        while (tem != null) {
+            int cmp = key.compareTo(tem.key);
+            if (cmp < 0) {
+                tem = tem.left;
+            } else if (cmp > 0) {
+                tem = tem.right;
+            } else {
+                return tem.value;
+            }
+        }
+        return null;
     }
 
     /** Returns the value to which the specified key is mapped, or null if this
@@ -52,14 +66,46 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        V value = getHelper(key, root);
+        return value;
     }
 
     /** Returns a BSTMap rooted in p with (KEY, VALUE) added as a key-value mapping.
       * Or if p is null, it returns a one node BSTMap containing (KEY, VALUE).
      */
     private Node putHelper(K key, V value, Node p) {
-        throw new UnsupportedOperationException();
+        if (key == null) {
+            throw new NullPointerException();
+        }
+        if (p == null) {
+            root = new Node(key, value);
+            size++;
+            return root;
+        }
+        Node tem = p;
+        Node parent = tem;
+        while (tem != null) {
+            int cmp = key.compareTo(tem.key);
+            parent = tem;
+            if (cmp < 0) {
+                tem = tem.left;
+            } else if (cmp > 0) {
+                tem = tem.right;
+            } else {
+                break;
+            }
+        }
+        int cmp = key.compareTo(parent.key);
+        if (cmp < 0) {
+            parent.left = new Node(key, value);
+        } else if (cmp > 0) {
+            parent.right = new Node(key, value);
+        } else {
+            parent.key = key;
+            parent.value = value;
+        }
+        size++;
+        return root;
     }
 
     /** Inserts the key KEY
@@ -67,13 +113,14 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public void put(K key, V value) {
-        throw new UnsupportedOperationException();
+        Node node = putHelper(key, value, root);
+        return;
     }
 
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////

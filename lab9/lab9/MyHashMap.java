@@ -53,19 +53,53 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        if (key == null) {
+            throw new NullPointerException();
+        }
+        int hashValue = hash(key);
+        if (buckets[hashValue] == null) {
+            return null;
+        }
+        return buckets[hashValue].get(key);
     }
 
     /* Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (key == null) {
+            throw new NullPointerException();
+        }
+        int hashValue = hash(key);
+        if (buckets[hashValue] == null) {
+            buckets[hashValue] = new ArrayMap<K, V>();
+        }
+        if (!buckets[hashValue].containsKey(key)) {
+            size++;
+        }
+        buckets[hashValue].put(key, value);
+
+        if (loadFactor() > MAX_LF) {
+            ArrayMap<K, V>[] newBuckets = new ArrayMap[2 * buckets.length];
+            for (ArrayMap<K, V> arrayMap : buckets) {
+                if (arrayMap != null) {
+                    Set<K> keySet = arrayMap.keySet();
+                    for (K arrayKey : keySet) {
+                        int newHash = Math.floorMod(arrayKey.hashCode(), newBuckets.length);
+                        if (newBuckets[newHash] == null) {
+                            newBuckets[newHash] = new ArrayMap<K, V>();
+                        }
+                        newBuckets[newHash].put(arrayKey, arrayMap.get(arrayKey));
+                    }
+                }
+            }
+            buckets = newBuckets;
+        }
     }
 
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
