@@ -1,5 +1,6 @@
 package hw4.puzzle;
 
+import edu.princeton.cs.algs4.BlackFilter;
 import edu.princeton.cs.algs4.Queue;
 
 import java.util.Set;
@@ -102,7 +103,7 @@ public class Board implements WorldState{
                 }
                 if (myTiles[i][j] != answer[i][j]) {
                     int[] cood = findOrigin(myTiles[i][j]);
-                    man += bfs(i, j, cood[0], cood[1]);
+                    man += (Math.abs(cood[0] - i) + Math.abs(cood[1] - j));
                 }
             }
         }
@@ -117,15 +118,7 @@ public class Board implements WorldState{
     }
 
 
-    private int bfs(int i, int j, int targetI, int targetJ) {
-        if (!validate(i, j)) {
-            return Integer.MAX_VALUE;
-        }
-        if (i == targetI && j == targetJ) {
-            return 0;
-        }
-        return 1 + Math.min(bfs(i + 1, j, targetI, targetJ), bfs(i, j + 1, targetI, targetJ));
-    }
+
 
     private boolean validate(int i, int j) {
         if (i < 0 || i > size || j < 0 || j > size) {
@@ -159,6 +152,11 @@ public class Board implements WorldState{
             }
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return myTiles.hashCode() * 2 * 2 * 2 + size * 2 * 2 + answer.hashCode() * 2 + BLANK;
     }
 
     /** Returns the string representation of the board. 
