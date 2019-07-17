@@ -35,26 +35,25 @@ public class MazeAStarPath extends MazeExplorer {
 
     /** Performs an A star search from vertex s. */
     private void astar(int s) {
-        if (!marked[s]) {
+            if (s == t) {
+                return;
+            }
             marked[s] = true;
             announce();
             int minDis = Integer.MAX_VALUE;
             int minW = -1;
             for (int w : maze.adj(s)) {
                 if (!marked[w]) {
-                    distTo[w] = distTo[s] + 1;
-                    int temMinDis = distTo[w] + h(w);
-                    if (temMinDis < minDis) {
-                        minDis = temMinDis;
+                    distTo[w] = distTo[s] + 1 + h(w);
+                    if (distTo[w] < minDis) {
+                        minDis = distTo[w];
                         minW = w;
                     }
                 }
-                edgeTo[w] = s;
-                announce();
-                astar(w);
             }
-        }
-
+        edgeTo[minW] = s;
+        announce();
+        astar(minW);
     }
 
     @Override
