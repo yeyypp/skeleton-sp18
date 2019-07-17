@@ -33,7 +33,7 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
     private void bfs(int v) {
         Queue<Integer> queue = new LinkedList<>();
         queue.offer(v);
-        while (!targetFound) {
+        while (!queue.isEmpty()) {
             int cur = queue.poll();
             marked[cur] = true;
             announce();
