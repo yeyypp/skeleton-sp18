@@ -20,7 +20,11 @@ public class MazeAStarPath extends MazeExplorer {
 
     /** Estimate of the distance from v to the target. */
     private int h(int v) {
-        return -1;
+        int sx = maze.toX(v);
+        int sy = maze.toY(v);
+        int tx = maze.toX(t);
+        int ty = maze.toY(t);
+        return Math.abs(sx - tx) + Math.abs(sy - ty);
     }
 
     /** Finds vertex estimated to be closest to target. */
@@ -31,7 +35,26 @@ public class MazeAStarPath extends MazeExplorer {
 
     /** Performs an A star search from vertex s. */
     private void astar(int s) {
-        // TODO
+        if (!marked[s]) {
+            marked[s] = true;
+            announce();
+            int minDis = Integer.MAX_VALUE;
+            int minW = -1;
+            for (int w : maze.adj(s)) {
+                if (!marked[w]) {
+                    distTo[w] = distTo[s] + 1;
+                    int temMinDis = distTo[w] + h(w);
+                    if (temMinDis < minDis) {
+                        minDis = temMinDis;
+                        minW = w;
+                    }
+                }
+                edgeTo[w] = s;
+                announce();
+                astar(w);
+            }
+        }
+
     }
 
     @Override
