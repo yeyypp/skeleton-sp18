@@ -105,6 +105,7 @@ public class Rasterer {
         results.put("raster_lr_lat", raster_lr_lat);
         results.put("depth", depth);
         results.put("query_success", query_success);
+        System.out.println(results);
         return results;
     }
 
