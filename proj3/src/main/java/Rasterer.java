@@ -58,6 +58,19 @@ public class Rasterer {
         double targetLrlon = params.get("lrlon");
         double targetLrlat = params.get("lrlat");
 
+        if (targetUllon < ULLON) {
+            targetUllon = ULLON;
+        }
+        if (targetUllat > ULLAT) {
+            targetUllat = ULLAT;
+        }
+        if (targetLrlon > LRLON) {
+            targetLrlon = LRLON;
+        }
+        if (targetLrlat < LRLAT) {
+            targetLrlat = LRLAT;
+        }
+
         String[] ullon = binarySearchUllon(sizeOfGrid, targetUllon);
         String[] ullat = binarySearchUllat(sizeOfGrid, targetUllat);
         String[] lrlon = binarySearchLrlon(sizeOfGrid, targetLrlon);
@@ -180,6 +193,7 @@ public class Rasterer {
                 left = mid + 1;
             }
         }
+
         return ans;
     }
 
@@ -200,6 +214,7 @@ public class Rasterer {
                 left = mid + 1;
             }
         }
+
         return ans;
     }
 
@@ -220,6 +235,7 @@ public class Rasterer {
                 right = mid - 1;
             }
         }
+
         return ans;
     }
 
