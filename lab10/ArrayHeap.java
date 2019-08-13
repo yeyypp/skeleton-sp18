@@ -112,7 +112,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             swap(index, parent);
             swim(parent);
         }
-        return;
+
     }
 
     /**
@@ -132,7 +132,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             swap(index, minIndex);
             sink(minIndex);
         }
-        return;
+
     }
 
     /**
