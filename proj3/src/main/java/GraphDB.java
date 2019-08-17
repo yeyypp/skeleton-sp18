@@ -69,6 +69,9 @@ public class GraphDB {
     }
 
     double getDistanceTo(long startID, long destID) {
+        if (startID == destID) {
+            return 0.0;
+        }
         return nodeMap.get(startID).distanceTo.get(destID);
     }
 

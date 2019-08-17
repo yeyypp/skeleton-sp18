@@ -24,19 +24,20 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        List<Long> ans = new LinkedList<>();
         long startID = g.closest(stlon, stlat);
         long destID = g.closest(destlon, destlat);
-        return Dijkstra(g, startID, destID);
+        return Astar(g, startID, destID);
     }
 
     private static class Pair implements Comparable<Pair> {
         private long id;
         private double dis;
+        private long lastID;
 
-        private Pair(long id, double dis) {
+        private Pair(long id, double dis, long lastID) {
             this.id = id;
             this.dis = dis;
+            this.lastID = lastID;
         }
 
         @Override
@@ -46,49 +47,52 @@ public class Router {
     }
 
     private static List<Long> Dijkstra(GraphDB g, long startID, long destID) {
-        Set<Long> set = new HashSet<>();
+        Map<Long, Long> path = new HashMap<>();
         PriorityQueue<Pair> minHeap = new PriorityQueue<>();
         Map<Long, Double> disToS = new HashMap<>();
         for (long id : g.vertices()) {
             disToS.put(id, Double.MAX_VALUE);
         }
         disToS.put(startID, 0.0);
-        minHeap.offer(new Pair(startID, 0.0));
+        minHeap.offer(new Pair(startID, 0.0, startID));
+
+        List<Long> SPT = new LinkedList<>();
 
         while (!minHeap.isEmpty()) {
             Pair cur = minHeap.poll();
             long curID = cur.id;
             double curDis = cur.dis;
-            System.out.println("curID is " + curID);
-            System.out.println("curDis is " + curDis);
-            if (set.contains(curID)) {
+            long lastID = cur.lastID;
+
+            if (SPT.contains(curID)) {
                 continue;
             }
-            set.add(curID);
-            if (curID == destID) {
-                return new ArrayList<>(set);
-            }
+
+            SPT.add(curID);
+            path.put(curID, lastID);
+
             for (long adjID : g.getNodeAdj(curID)) {
-                if (!set.contains(adjID)) {
+                if (!SPT.contains(adjID)) {
                     double oldDis = disToS.get(adjID);
                     double newDis = curDis + g.getDistanceTo(curID, adjID);
                     if (newDis <= oldDis) {
                         disToS.put(adjID, newDis);
-                        minHeap.offer(new Pair(adjID, newDis));
+                        minHeap.offer(new Pair(adjID, newDis, curID));
                     }
                 }
             }
         }
-
-        List<Long> ans = new ArrayList<>(set);
+        long cur = destID;
+        List<Long> ans = new LinkedList<>();
+        while (cur != startID) {
+            ans.add(0, cur);
+            cur = path.get(cur);
+        }
+        ans.add(0, startID);
         return ans;
     }
 
-    private static List<Long> Astar(GraphDB g, long starID, long destID) {
-        Map<Long, Double> disToDest = new HashMap<>();
-        for (long id : g.vertices()) {
-            disToDest.put(id, g.getDistanceTo(id, destID));
-        }
+    private static List<Long> Astar(GraphDB g, long startID, long destID) {
         return null;
     }
 
