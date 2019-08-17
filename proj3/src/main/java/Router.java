@@ -26,7 +26,7 @@ public class Router {
                                           double destlon, double destlat) {
         long startID = g.closest(stlon, stlat);
         long destID = g.closest(destlon, destlat);
-        return Astar(g, startID, destID);
+        return Dijkstra(g, startID, destID);
     }
 
     private static class Pair implements Comparable<Pair> {
