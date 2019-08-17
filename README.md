@@ -15,3 +15,4 @@ A self learning repo of CS61B 2018.
 - [x] Project0
 - [x] Project1A
 - [x] Project1B
+- [x] Project3 BearMaps Part I
