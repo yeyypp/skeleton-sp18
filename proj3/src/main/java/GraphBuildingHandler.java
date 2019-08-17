@@ -39,7 +39,7 @@ public class GraphBuildingHandler extends DefaultHandler {
 
     private long lastNode;
     private List<Long> way = new LinkedList<>();
-    private boolean isValidWay;
+    private boolean isValidWay = false;
 
     /**
      * Create a new GraphBuildingHandler.
@@ -108,8 +108,8 @@ public class GraphBuildingHandler extends DefaultHandler {
                 System.out.println("Highway type: " + v);
                 /* Hint: Setting a "flag" is good enough! */
 
-                if (!ALLOWED_HIGHWAY_TYPES.contains(v)) {
-                    isValidWay = false;
+                if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
+                    isValidWay = true;
                 }
             } else if (k.equals("name")) {
                 System.out.println("Way Name: " + v);
@@ -146,15 +146,15 @@ public class GraphBuildingHandler extends DefaultHandler {
             chance to actually connect the nodes together if the way is valid. */
             System.out.println("Finishing a way...");
             if (isValidWay) {
-                long cur = way.get(0);
-                way.remove(0);
-                for (long id : way) {
-                    g.addEdge(cur, id);
-                    cur = id;
+                int a = 0, b = 1;
+                while (b < way.size()) {
+                    g.addEdge(way.get(a), way.get(b));
+                    a++;
+                    b++;
                 }
             }
             way = new LinkedList<>();
-            isValidWay = true;
+            isValidWay = false;
         }
     }
 

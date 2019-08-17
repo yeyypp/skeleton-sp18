@@ -1,5 +1,4 @@
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,8 +24,75 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        List<Long> ans = new LinkedList<>();
+        long startID = g.closest(stlon, stlat);
+        long destID = g.closest(destlon, destlat);
+        return Dijkstra(g, startID, destID);
     }
+
+    private static class Pair implements Comparable<Pair> {
+        private long id;
+        private double dis;
+
+        private Pair(long id, double dis) {
+            this.id = id;
+            this.dis = dis;
+        }
+
+        @Override
+        public int compareTo(Pair pair) {
+            return this.dis < pair.dis ? -1 : 1;
+        }
+    }
+
+    private static List<Long> Dijkstra(GraphDB g, long startID, long destID) {
+        Set<Long> set = new HashSet<>();
+        PriorityQueue<Pair> minHeap = new PriorityQueue<>();
+        Map<Long, Double> disToS = new HashMap<>();
+        for (long id : g.vertices()) {
+            disToS.put(id, Double.MAX_VALUE);
+        }
+        disToS.put(startID, 0.0);
+        minHeap.offer(new Pair(startID, 0.0));
+
+        while (!minHeap.isEmpty()) {
+            Pair cur = minHeap.poll();
+            long curID = cur.id;
+            double curDis = cur.dis;
+            System.out.println("curID is " + curID);
+            System.out.println("curDis is " + curDis);
+            if (set.contains(curID)) {
+                continue;
+            }
+            set.add(curID);
+            if (curID == destID) {
+                return new ArrayList<>(set);
+            }
+            for (long adjID : g.getNodeAdj(curID)) {
+                if (!set.contains(adjID)) {
+                    double oldDis = disToS.get(adjID);
+                    double newDis = curDis + g.getDistanceTo(curID, adjID);
+                    if (newDis <= oldDis) {
+                        disToS.put(adjID, newDis);
+                        minHeap.offer(new Pair(adjID, newDis));
+                    }
+                }
+            }
+        }
+
+        List<Long> ans = new ArrayList<>(set);
+        return ans;
+    }
+
+    private static List<Long> Astar(GraphDB g, long starID, long destID) {
+        Map<Long, Double> disToDest = new HashMap<>();
+        for (long id : g.vertices()) {
+            disToDest.put(id, g.getDistanceTo(id, destID));
+        }
+        return null;
+    }
+
+
 
     /**
      * Create the list of directions corresponding to a route on the graph.

@@ -28,6 +28,7 @@ public class GraphDB {
         private double lon;
         private String locationName;
         private List<Long> adjacent;
+        private Map<Long, Double> distanceTo;
 
         private Node(long id, double lat, double lon) {
             this.id = id;
@@ -35,6 +36,7 @@ public class GraphDB {
             this.lon = lon;
             this.locationName = null;
             this.adjacent = new LinkedList<>();
+            this.distanceTo = new HashMap<>();
         }
 
         private void setLocationName(String locationName) {
@@ -43,7 +45,10 @@ public class GraphDB {
 
         private void addEdge(long id) {
             adjacent.add(id);
+            double distance = distance(this.id, id);
+            distanceTo.put(id, distance);
         }
+
     }
 
     void addNode(long id, double lat, double lon) {
@@ -56,7 +61,15 @@ public class GraphDB {
     }
 
     void setLocationName(long id, String locationName) {
-        nodeMap.get(id).locationName = locationName;
+        nodeMap.get(id).setLocationName(locationName);
+    }
+
+    Iterable<Long> getNodeAdj(long id) {
+        return nodeMap.get(id).adjacent;
+    }
+
+    double getDistanceTo(long startID, long destID) {
+        return nodeMap.get(startID).distanceTo.get(destID);
     }
 
 
