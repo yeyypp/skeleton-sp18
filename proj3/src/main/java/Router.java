@@ -46,6 +46,7 @@ public class Router {
         }
     }
 
+
     private static List<Long> Dijkstra(GraphDB g, long startID, long destID) {
         Map<Long, Long> path = new HashMap<>();
         PriorityQueue<Pair> minHeap = new PriorityQueue<>();
@@ -93,52 +94,7 @@ public class Router {
     }
 
     private static List<Long> Astar(GraphDB g, long startID, long destID) {
-        Map<Long, Long> path = new HashMap<>();
-        PriorityQueue<Pair> minHeap = new PriorityQueue<>();
-        Map<Long, Double> disToS = new HashMap<>();
-        for (long id : g.vertices()) {
-            disToS.put(id, Double.MAX_VALUE);
-        }
-        disToS.put(startID, 0.0);
-        minHeap.offer(new Pair(startID, 0.0 + g.distance(startID, destID), startID));
-
-        List<Long> SPT = new LinkedList<>();
-
-        while (!minHeap.isEmpty()) {
-            Pair cur = minHeap.poll();
-            long curID = cur.id;
-            double curDis = cur.dis;
-            long lastID = cur.lastID;
-
-            if (SPT.contains(curID)) {
-                continue;
-            }
-
-            SPT.add(curID);
-            path.put(curID, lastID);
-            if (curID == destID) {
-                break;
-            }
-
-            for (long adjID : g.getNodeAdj(curID)) {
-                if (!SPT.contains(adjID)) {
-                    double oldDis = disToS.get(adjID);
-                    double newDis = curDis + g.getDistanceTo(curID, adjID);
-                    if (newDis <= oldDis) {
-                        disToS.put(adjID, newDis);
-                        minHeap.offer(new Pair(adjID, newDis + g.distance(adjID, destID), curID));
-                    }
-                }
-            }
-        }
-        long cur = destID;
-        List<Long> ans = new LinkedList<>();
-        while (cur != startID) {
-            ans.add(0, cur);
-            cur = path.get(cur);
-        }
-        ans.add(0, startID);
-        return ans;
+        return null;
     }
 
 
