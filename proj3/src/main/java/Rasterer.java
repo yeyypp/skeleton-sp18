@@ -17,7 +17,6 @@ public class Rasterer {
     private static final double HEIGHT = ULLAT - LRLAT;
 
     public Rasterer() {
-        // YOUR CODE HERE
     }
 
     /**

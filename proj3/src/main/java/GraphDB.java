@@ -126,7 +126,6 @@ public class GraphDB {
      * @return An iterable of id's of all vertices in the graph.
      */
     Iterable<Long> vertices() {
-        //YOUR CODE HERE, this currently returns only an empty list.
         return new ArrayList<>(nodeMap.keySet());
     }
 
