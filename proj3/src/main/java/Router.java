@@ -29,62 +29,50 @@ public class Router {
         return Astar(g, startID, destID);
     }
 
-    private static class Pair implements Comparable<Pair> {
-        private long id;
-        private double dis;
-        private long lastID;
-
-        private Pair(long id, double dis, long lastID) {
-            this.id = id;
-            this.dis = dis;
-            this.lastID = lastID;
-        }
-
-        @Override
-        public int compareTo(Pair pair) {
-            return this.dis < pair.dis ? -1 : 1;
-        }
-    }
-
-
     private static List<Long> Dijkstra(GraphDB g, long startID, long destID) {
-        Map<Long, Long> path = new HashMap<>();
-        PriorityQueue<Pair> minHeap = new PriorityQueue<>();
         Map<Long, Double> disToS = new HashMap<>();
         for (long id : g.vertices()) {
             disToS.put(id, Double.MAX_VALUE);
         }
         disToS.put(startID, 0.0);
-        minHeap.offer(new Pair(startID, 0.0, startID));
 
-        List<Long> SPT = new LinkedList<>();
+        Map<Long, Long> path = new HashMap<>();
+        Set<Long> visited = new HashSet<>();
+
+        PriorityQueue<Long> minHeap = new PriorityQueue<>(new Comparator<Long>() {
+            @Override
+            public int compare(Long o1, Long o2) {
+                double o1Dis = disToS.get(o1);
+                double o2Dis = disToS.get(o2);
+                return o1Dis < o2Dis ? -1 : 1;
+            }
+        });
+
+        minHeap.offer(startID);
 
         while (!minHeap.isEmpty()) {
-            Pair cur = minHeap.poll();
-            long curID = cur.id;
-            double curDis = cur.dis;
-            long lastID = cur.lastID;
+            long curID = minHeap.poll();
 
-            if (SPT.contains(curID)) {
-                continue;
+            if (curID == destID) {
+                break;
             }
 
-            SPT.add(curID);
-            path.put(curID, lastID);
-
-            for (long adjID : g.getNodeAdj(curID)) {
-                if (!SPT.contains(adjID)) {
+            if (!visited.contains(curID)) {
+                visited.add(curID);
+                for (long adjID : g.getNodeAdj(curID)) {
                     double oldDis = disToS.get(adjID);
-                    double newDis = curDis + g.getDistanceTo(curID, adjID);
-                    if (newDis <= oldDis) {
+                    double newDis = disToS.get(curID) + g.getDistanceTo(curID, adjID);
+                    if (newDis < oldDis) {
                         disToS.put(adjID, newDis);
-                        minHeap.offer(new Pair(adjID, newDis, curID));
+                        minHeap.offer(adjID);
+                        path.put(adjID, curID);
                     }
                 }
             }
         }
-        long cur = destID;
+
         List<Long> ans = new LinkedList<>();
+        long cur = destID;
         while (cur != startID) {
             ans.add(0, cur);
             cur = path.get(cur);
@@ -94,7 +82,61 @@ public class Router {
     }
 
     private static List<Long> Astar(GraphDB g, long startID, long destID) {
-        return null;
+        Map<Long, Double> disToS = new HashMap<>();
+        Map<Long, Double> disToD = new HashMap<>();
+        for (long id : g.vertices()) {
+            disToS.put(id, Double.MAX_VALUE);
+            disToD.put(id, g.distance(id, destID));
+        }
+        disToS.put(startID, 0.0);
+        disToD.put(destID, 0.0);
+
+        Map<Long, Long> path = new HashMap<>();
+        path.put(startID, startID);
+
+        PriorityQueue<Long> minHeap = new PriorityQueue<>(new Comparator<Long>() {
+            @Override
+            public int compare(Long o1, Long o2) {
+                double o1Dis = disToS.get(o1) + disToD.get(o1);
+                double o2Dis = disToS.get(o2) + disToD.get(o2);
+                return o1Dis < o2Dis ? -1 : 1;
+            }
+        });
+
+        Set<Long> visited = new HashSet<>();
+
+        minHeap.offer(startID);
+
+        List<Long> ans = new LinkedList<>();
+
+        while (!minHeap.isEmpty()) {
+            Long curID = minHeap.poll();
+
+            if (curID == destID) {
+                break;
+            }
+
+            if (!visited.contains(curID)) {
+                visited.add(curID);
+                for (long adjID : g.getNodeAdj(curID)) {
+                    double oldDis = disToS.get(adjID);
+                    double newDis = disToS.get(curID) + g.getDistanceTo(curID, adjID);
+                    if (newDis < oldDis) {
+                        disToS.put(adjID, newDis);
+                        path.put(adjID, curID);
+                        minHeap.offer(adjID);
+                    }
+                }
+            }
+        }
+
+        long cur = destID;
+        while (cur != startID) {
+            ans.add(0, cur);
+            cur = path.get(cur);
+        }
+        ans.add(0, startID);
+        return ans;
     }
 
 
