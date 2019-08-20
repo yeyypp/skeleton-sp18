@@ -81,6 +81,8 @@ public class MapServer {
     private static GraphDB graph;
     private static List<Long> route = new LinkedList<>();
     /* Define any static variables here. Do not define any instance variables of MapServer. */
+    private static Trie trie;
+
 
 
     /**
@@ -91,6 +93,14 @@ public class MapServer {
     public static void initialize() {
         graph = new GraphDB(OSM_DB_PATH);
         rasterer = new Rasterer();
+        trie = new Trie();
+        for (long id : graph.vertices()) {
+            String name = graph.getName(id);
+            if (name != null) {
+                trie.insert(name);
+            }
+        }
+
     }
 
     public static void main(String[] args) {
@@ -285,7 +295,7 @@ public class MapServer {
      * cleaned <code>prefix</code>.
      */
     public static List<String> getLocationsByPrefix(String prefix) {
-        return new LinkedList<>();
+        return trie.wordsByPrefix(prefix);
     }
 
     /**

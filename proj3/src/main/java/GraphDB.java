@@ -64,6 +64,10 @@ public class GraphDB {
         nodeMap.get(id).setLocationName(locationName);
     }
 
+    String getName(long id) {
+        return nodeMap.get(id).locationName;
+    }
+
     Iterable<Long> getNodeAdj(long id) {
         return nodeMap.get(id).adjacent;
     }
