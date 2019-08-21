@@ -94,13 +94,9 @@ public class MapServer {
         graph = new GraphDB(OSM_DB_PATH);
         rasterer = new Rasterer();
         trie = new Trie();
-        for (long id : graph.vertices()) {
-            String name = graph.getName(id);
-            if (name != null) {
-                trie.insert(name);
-            }
+        for (String s : graph.getLocationsList()) {
+            trie.insert(s);
         }
-
     }
 
     public static void main(String[] args) {
@@ -295,7 +291,11 @@ public class MapServer {
      * cleaned <code>prefix</code>.
      */
     public static List<String> getLocationsByPrefix(String prefix) {
-        return trie.wordsByPrefix(prefix);
+        List<String> ans = trie.wordsByPrefix(prefix);
+        if (ans == null) {
+            System.out.println("something wrong with trie");
+        }
+        return ans;
     }
 
     /**
@@ -311,7 +311,7 @@ public class MapServer {
      * "id" : Number, The id of the node. <br>
      */
     public static List<Map<String, Object>> getLocations(String locationName) {
-        return new LinkedList<>();
+        return graph.getLocationsByName(locationName);
     }
 
     /**

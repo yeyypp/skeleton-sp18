@@ -1,3 +1,4 @@
+
 import java.util.*;
 
 /**
@@ -24,6 +25,9 @@ public class Trie {
         }
 
         private boolean containsKey(char c) {
+            if (!Character.isLetter(c)) {
+                return false;
+            }
             return links[c - 'a'] != null;
         }
 
@@ -59,20 +63,11 @@ public class Trie {
     }
 
     /**
-     * remove all the item that is not a character
-     * @param word
-     * @return
-     */
-    private String clean(String word) {
-        return word.replaceAll("\\W", "").toLowerCase();
-    }
-
-    /**
      * Insert a word to the Trie
      * @param word
      */
     public void insert(String word) {
-        String cleanWord = clean(word);
+        String cleanWord = GraphDB.cleanString(word);
         TrieNode curNode = root;
         for (int i = 0; i < cleanWord.length(); i++) {
             char curC = cleanWord.charAt(i);
@@ -91,7 +86,7 @@ public class Trie {
      * @return return null if no such word or the last node of the word if exist
      */
     private TrieNode search(String word) {
-        String cleanWord = clean(word);
+        String cleanWord = GraphDB.cleanString(word);
         TrieNode curNode = root;
         for (int i = 0; i < cleanWord.length(); i++) {
             char curC = cleanWord.charAt(i);
@@ -125,7 +120,7 @@ public class Trie {
     }
 
     public List<String> wordsByPrefix(String prefix) {
-        String cleanPrefix = clean(prefix);
+        String cleanPrefix = GraphDB.cleanString(prefix);
         TrieNode curNode = root;
         for (int i = 0; i < cleanPrefix.length(); i++) {
             char c = cleanPrefix.charAt(i);
@@ -134,23 +129,22 @@ public class Trie {
             }
             curNode = curNode.get(c);
         }
-        Set<String> set = new HashSet<>();
+
+        List<String> ans = new LinkedList<>();
         Deque<TrieNode> stack = new LinkedList<>();
         stack.push(curNode);
 
         while (!stack.isEmpty()) {
             TrieNode cur = stack.pop();
             if (cur.isEnd) {
-                set.add(cur.word);
+                ans.add(cur.word);
             }
-            for (int i = 25; i >= 0; i--) {
+            for (int i = 0; i < 26; i++) {
                 if (cur.links[i] != null) {
                     stack.push(cur.links[i]);
                 }
             }
         }
-        List<String> ans = new LinkedList<>();
-        ans.addAll(set);
         return ans;
     }
 }

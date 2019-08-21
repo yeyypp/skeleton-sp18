@@ -21,6 +21,7 @@ public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
     private Map<Long, Node> nodeMap = new HashMap<>();
+    private List<String> locationsList = new LinkedList<>();
 
     private class Node {
         private long id;
@@ -62,6 +63,7 @@ public class GraphDB {
 
     void setLocationName(long id, String locationName) {
         nodeMap.get(id).setLocationName(locationName);
+        locationsList.add(locationName);
     }
 
     String getName(long id) {
@@ -77,6 +79,34 @@ public class GraphDB {
             return 0.0;
         }
         return nodeMap.get(startID).distanceTo.get(destID);
+    }
+
+    List<Map<String, Object>> getLocationsByName(String locationName) {
+        List<Map<String, Object>> ans = new LinkedList<>();
+        String cleanLocationName = cleanString(locationName);
+        for (long id : vertices()) {
+            Node curNode = nodeMap.get(id);
+            String curName = curNode.locationName;
+            if (curName != null && cleanString(curName).equals(locationName)) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("lat", curNode.lat);
+                map.put("lon", curNode.lon);
+                map.put("name", curNode.locationName);
+                map.put("id", curNode.id);
+                ans.add(map);
+            }
+        }
+        return ans;
+    }
+
+    void printLocations() {
+        for (String s : locationsList) {
+            System.out.println(s);
+        }
+    }
+
+    List<String> getLocationsList() {
+        return locationsList;
     }
 
 
@@ -109,7 +139,7 @@ public class GraphDB {
      * @return Cleaned string.
      */
     static String cleanString(String s) {
-        return s.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+        return s.replaceAll("[^a-zA-Z]", "").toLowerCase();
     }
 
     /**
