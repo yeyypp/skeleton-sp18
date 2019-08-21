@@ -292,9 +292,6 @@ public class MapServer {
      */
     public static List<String> getLocationsByPrefix(String prefix) {
         List<String> ans = trie.wordsByPrefix(prefix);
-        if (ans == null) {
-            System.out.println("something wrong with trie");
-        }
         return ans;
     }
 
@@ -311,7 +308,8 @@ public class MapServer {
      * "id" : Number, The id of the node. <br>
      */
     public static List<Map<String, Object>> getLocations(String locationName) {
-        return graph.getLocationsByName(locationName);
+        List<Map<String, Object>> ans = graph.getLocationsByName(locationName);
+        return ans;
     }
 
     /**

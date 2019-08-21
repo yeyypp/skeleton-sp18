@@ -87,7 +87,7 @@ public class GraphDB {
         for (long id : vertices()) {
             Node curNode = nodeMap.get(id);
             String curName = curNode.locationName;
-            if (curName != null && cleanString(curName).equals(locationName)) {
+            if (curName != null && cleanString(curName).equals(cleanLocationName)) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("lat", curNode.lat);
                 map.put("lon", curNode.lon);
@@ -95,6 +95,9 @@ public class GraphDB {
                 map.put("id", curNode.id);
                 ans.add(map);
             }
+        }
+        for (Map map : ans) {
+            System.out.println(map.get("name"));
         }
         return ans;
     }
