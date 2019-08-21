@@ -1,5 +1,5 @@
 # skeleton-sp18
-A self learning repo of CS61B 2018.
+A self learning repository for CS61B 2018.
 
 - [x] HW1
 - [x] HW2
@@ -16,3 +16,5 @@ A self learning repo of CS61B 2018.
 - [x] Project1A
 - [x] Project1B
 - [x] Project3 BearMaps Part I
+- [x] Project3 BearMaps Part II & III
+- [x] Project3 BearMaps Gold
