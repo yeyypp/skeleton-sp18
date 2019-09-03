@@ -96,16 +96,8 @@ public class GraphDB {
                 ans.add(map);
             }
         }
-        for (Map map : ans) {
-            System.out.println(map.get("name"));
-        }
-        return ans;
-    }
 
-    void printLocations() {
-        for (String s : locationsList) {
-            System.out.println(s);
-        }
+        return ans;
     }
 
     List<String> getLocationsList() {
